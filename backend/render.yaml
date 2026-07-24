@@ -1,0 +1,24 @@
+
+services:
+  - type: web
+    name: interview-mirror-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_CHAT_MODEL
+        value: google/gemini-2.5-flash
+      - key: OPENROUTER_EMBEDDING_MODEL
+        value: openai/text-embedding-3-small
+      - key: STORAGE_DIR
+        value: /opt/render/project/storage
+      - key: FRONTEND_URL
+        sync: false
