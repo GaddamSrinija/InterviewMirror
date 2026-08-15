@@ -124,6 +124,7 @@ Return ONLY valid JSON."""
 
 async def run_analysis(job_id: int, repository_id: int) -> None:
     async with async_session() as db:
+        job = None
         try:
             job = await db.get(AnalysisJob, job_id)
             repo = await db.get(Repository, repository_id)
@@ -150,7 +151,7 @@ async def run_analysis(job_id: int, repository_id: int) -> None:
                 )
                 if content.strip():
                     file_contents[f["path"]] = content
-                progress = 15 + int((i / len(prioritized)) * 30)
+                progress = 15 + int((i / len(prioritized)) * 30) if prioritized else 45
                 job.progress = min(progress, 45)
                 job.current_step = f"Downloading: {f['path']}"
                 await db.commit()

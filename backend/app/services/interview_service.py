@@ -130,7 +130,12 @@ async def get_user_sessions(
     result = await db.execute(
         select(InterviewSession)
         .where(InterviewSession.user_id == user_id)
-        .options(selectinload(InterviewSession.repository))
+        .options(
+            selectinload(InterviewSession.repository),
+            selectinload(InterviewSession.questions)
+            .selectinload(Question.answer)
+            .selectinload(Answer.evaluation),
+        )
         .order_by(InterviewSession.started_at.desc())
     )
     return list(result.scalars().all())
